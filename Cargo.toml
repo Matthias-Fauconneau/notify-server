@@ -7,5 +7,4 @@ edition = "2018"
 
 [dependencies]
 notify-rust = ""
-#winit = { git = "https://github.com/rust-windowing/winit?rev=709808eb4e69044705fcb214bcc30556db761405#709808eb" }
-iced = { git = "https://github.com/hecrj/iced.git" }
+iced = { path = "iced" } #{ git = "https://github.com/hecrj/iced.git" }
