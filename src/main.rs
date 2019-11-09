@@ -37,10 +37,10 @@ fn main() {
     notify_rust::server::NotificationServer::start(&notify_rust::server::NotificationServer::create(), |notification| {
         println!("{:#?}", notification);
 
-        let event_loop = iced::platform::EventLoop::new();
-        let window = iced::platform::Window::new(&event_loop).unwrap(); // FIXME: do not show. only to get on which current_monitor WM would map
+        let event_loop = iced::EventLoop::new();
+        let window = iced::Window::new(&event_loop).unwrap(); // FIXME: do not show. only to get on which current_monitor WM would map
         let size = window.current_monitor().size();
-        window.set_inner_size(iced::platform::dpi::LogicalSize::from_physical(iced::platform::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, window.hidpi_factor()));
+        window.set_inner_size(iced::dpi::LogicalSize::from_physical(iced::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, window.hidpi_factor()));
         use iced::Application;
         Notifications{notification:notification.clone()}.run(event_loop, window);
     });
