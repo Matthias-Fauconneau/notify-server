@@ -1,5 +1,5 @@
 #!/usr/bin/env -S cargo run
-use iced::winit as winit;
+use iced::winit as platform;
 struct Notifications {
     notification : notify_rust::Notification
 }
@@ -30,10 +30,10 @@ fn main() {
     notify_rust::server::NotificationServer::start(&notify_rust::server::NotificationServer::create(), |notification| {
         println!("{:#?}", notification);
 
-        let event_loop = winit::event_loop::EventLoop::new();
-        let window = winit::window::Window::new(&event_loop).unwrap(); // FIXME: do not show. only to get on which current_monitor WM would map
+        let event_loop = platform::event_loop::EventLoop::new();
+        let window = platform::window::Window::new(&event_loop).unwrap(); // FIXME: do not show. only to get on which current_monitor WM would map
         let size = window.current_monitor().size();
-        window.set_inner_size(winit::dpi::LogicalSize::from_physical(winit::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, window.hidpi_factor()));
+        window.set_inner_size(platform::dpi::LogicalSize::from_physical(platform::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, window.hidpi_factor()));
         iced::platform::Application::run(iced::Instance(Notifications{notification:notification.clone()}), event_loop, window);
     });
 }
