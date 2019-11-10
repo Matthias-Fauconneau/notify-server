@@ -21,6 +21,9 @@ impl iced::Application for Notifications {
     fn view(&mut self) -> iced::Element<Message> {
         let content = iced::Text::new(&self.notification.body);
         iced::Column::new()
+            .width(iced::Length::Shrink)
+            .align_self(iced::Align::Center)
+            .align_items(iced::Align::Center)
             .height(iced::Length::Fill)
             .justify_content(iced::Justify::Center)
             .push(content)
@@ -29,6 +32,7 @@ impl iced::Application for Notifications {
 }
 
 fn main() {
+    env_logger::init();
     std::thread::spawn(|| {
         std::thread::sleep(std::time::Duration::from_millis(500)); // FIXME: wait for dbus signal
         notify_rust::Notification::new().summary("Notification Test").body("This is a test notification.").show().unwrap();
@@ -36,9 +40,11 @@ fn main() {
     notify_rust::server::NotificationServer::start(&notify_rust::server::NotificationServer::create(), |notification| {
         println!("{:#?}", notification);
 
-        let instance = iced::Instance::new(Notifications{notification:notification.clone()});
-        let size = instance.platform.window.current_monitor().size();
-        instance.platform.window.set_inner_size(iced::dpi::LogicalSize::from_physical(iced::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, instance.platform.window.hidpi_factor()));
-        instance.run();
+        let mut instance = iced::Instance::new(Notifications{notification:notification.clone()});
+        let monitor = instance.platform.event_loop.primary_monitor(); // FIXME: get where window would map
+        let size = monitor.size();
+        instance.platform.window_builder = instance.platform.window_builder
+                                                            .with_inner_size(iced::dpi::LogicalSize::from_physical(iced::dpi::PhysicalSize{width: size.width/3., height: size.height/8.}, monitor.hidpi_factor()));
+        instance.run().unwrap()
     });
 }

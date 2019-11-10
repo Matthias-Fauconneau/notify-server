@@ -6,5 +6,6 @@ authors = ["Matthias Fauconneau <matthias.fauconneau@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+env_logger = ""
 notify-rust = ""
 iced = { path = "iced" } #{ git = "https://github.com/hecrj/iced.git" }
