@@ -9,10 +9,9 @@ pub enum Message {}
 
 impl iced::Application for Notifications {
     type Message = Message;
+    type Renderer = iced::Renderer;
 
-    fn title(&self) -> std::string::String {
-        self.notification.summary.clone()
-    }
+    fn title(&self) -> std::string::String { self.notification.summary.clone() }
 
     fn update(&mut self, message: Message) {
         match message {
@@ -37,11 +36,9 @@ fn main() {
     notify_rust::server::NotificationServer::start(&notify_rust::server::NotificationServer::create(), |notification| {
         println!("{:#?}", notification);
 
-        let event_loop = iced::EventLoop::new();
-        let window = iced::Window::new(&event_loop).unwrap(); // FIXME: do not show. only to get on which current_monitor WM would map
-        let size = window.current_monitor().size();
-        window.set_inner_size(iced::dpi::LogicalSize::from_physical(iced::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, window.hidpi_factor()));
-        use iced::Application;
-        Notifications{notification:notification.clone()}.run(event_loop, window);
+        let instance = iced::Instance::new(Notifications{notification:notification.clone()});
+        let size = instance.platform.window.current_monitor().size();
+        instance.platform.window.set_inner_size(iced::dpi::LogicalSize::from_physical(iced::dpi::PhysicalSize{width: size.width/2., height: size.height/2.}, instance.platform.window.hidpi_factor()));
+        instance.run();
     });
 }
