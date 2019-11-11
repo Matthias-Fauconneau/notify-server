@@ -16,16 +16,9 @@ impl<'a> iced::Application for Notification<'a> {
         }
     }
 
-    fn view(&mut self) -> iced::Element<Message> {
-        let element : iced::Element<Message> = iced::Column::new()
-            .width(iced::Length::Fill)
-            .align_self(iced::Align::Stretch)
-            .align_items(iced::Align::Stretch)
-            .height(iced::Length::Fill)
-            .justify_content(iced::Justify::Center)
-            .push(iced::Text::new(&self.0.body))
-            .into();
-        element.explain(iced::Color::BLACK)
+    fn style(&self) -> iced::Style { iced::Style{window_background: iced::Color{r:0.,g:0.,b:0.,a:1./2.} } }
+    fn view(&mut self) -> iced::Element<Message> { iced::Column::new().height(iced::Length::Fill).align_self(iced::Align::Center).justify_content(iced::Justify::Center).push(
+        iced::Text::new(&self.0.body).color(iced::Color::WHITE).horizontal_alignment(iced::text::HorizontalAlignment::Center).vertical_alignment(iced::text::VerticalAlignment::Center)).into()
     }
 }
 
