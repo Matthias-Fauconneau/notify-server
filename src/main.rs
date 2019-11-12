@@ -18,8 +18,14 @@ impl<'a> iced::Application for Notification<'a> {
 
     fn style(&self) -> iced::Style { iced::Style::dark() }
     fn view(&mut self) -> iced::Element<Message> {
-        iced::Row::new() //.height(iced::Length::Fill).align_self(iced::Align::Center).justify_content(iced::Justify::Center)
-        .push(iced::Image::new(&self.0.icon))
+        //Container::new(Image::new("").width(Length::Units(width)),).width(Length::Fill).center_x()
+        self.0.hints.iter().fold(iced::Row::new(), |row, hint| {
+            use notify_rust::NotificationHint::*;
+            match hint {
+                ImagePath(image_path) => row.push(iced::Image::new(image_path)).height(iced::Length::Fill), //.center_y(),
+                _ => { println!("{:#?}", hint); row },
+            }
+        })
         .push(iced::Text::new(&self.0.body).horizontal_alignment(iced::text::HorizontalAlignment::Center).vertical_alignment(iced::text::VerticalAlignment::Center))
         .into()
     }
