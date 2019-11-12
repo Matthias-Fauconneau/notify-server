@@ -16,11 +16,11 @@ impl<'a> iced::Application for Notification<'a> {
         }
     }
 
-    fn style(&self) -> iced::Style { iced::Style{window_background: iced::Color{r:0.,g:0.,b:0.,a:1./2.} } }
+    fn style(&self) -> iced::Style { iced::Style::dark() }
     fn view(&mut self) -> iced::Element<Message> {
         iced::Row::new() //.height(iced::Length::Fill).align_self(iced::Align::Center).justify_content(iced::Justify::Center)
-        .push(iced::Image::new(&self.0.body).color(iced::Color::WHITE).horizontal_alignment(iced::text::HorizontalAlignment::Center).vertical_alignment(iced::text::VerticalAlignment::Center))
-        .push(iced::Text::new(&self.0.body).color(iced::Color::WHITE).horizontal_alignment(iced::text::HorizontalAlignment::Center).vertical_alignment(iced::text::VerticalAlignment::Center))
+        .push(iced::Image::new(&self.0.icon))
+        .push(iced::Text::new(&self.0.body).horizontal_alignment(iced::text::HorizontalAlignment::Center).vertical_alignment(iced::text::VerticalAlignment::Center))
         .into()
     }
 }
@@ -29,7 +29,8 @@ fn main() {
     env_logger::init();
     std::thread::spawn(|| {
         std::thread::sleep(std::time::Duration::from_millis(500)); // FIXME: wait for dbus signal
-        notify_rust::Notification::new().summary("Notification Test").body("This is a test notification.").show().unwrap();
+        let image = format!("{}/resources/ferris.png", env!("CARGO_MANIFEST_DIR"));
+        notify_rust::Notification::new().summary("Notification Test").body("This is a test notification.").image_path(&image).show().unwrap();
     });
     notify_rust::server::NotificationServer::start(&notify_rust::server::NotificationServer::create(), move |notification : &notify_rust::Notification| {
         println!("{:#?}", notification);
